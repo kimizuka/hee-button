@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 `;
 
 export function Question({
-  text,
+  text = '',
   onAudio,
   onOk,
   onNg
@@ -33,6 +33,7 @@ export function Question({
   onOk: () => void;
   onNg: () => void;
 }) {
+  console.log(text);
   function handleClickBtnOk() {
     console.log('⭕️');
     onOk();
@@ -90,6 +91,48 @@ export function Question({
                 <button onClick={ handleClickBtnNg }>を</button>
               </p>
             );
+          case 'ヘ':
+              return (
+                <p key={ i }>
+                  <button onClick={ handleClickBtnNg }>エ</button>
+                  <button onClick={ handleClickBtnOk }>ヘ</button>
+                </p>
+              );
+            case 'エ':
+              return (
+                <p key={ i }>
+                  <button onClick={ handleClickBtnOk }>エ</button>
+                  <button onClick={ handleClickBtnNg }>ヘ</button>
+                </p>
+              );
+            case 'ワ':
+              return (
+                <p key={ i }>
+                  <button onClick={ handleClickBtnNg }>ハ</button>
+                  <button onClick={ handleClickBtnOk }>ワ</button>
+                </p>
+              );
+            case 'ハ':
+              return (
+                <p key={ i }>
+                  <button onClick={ handleClickBtnOk }>ハ</button>
+                  <button onClick={ handleClickBtnNg }>ワ</button>
+                </p>
+              );
+            case 'ヲ':
+              return (
+                <p key={ i }>
+                  <button onClick={ handleClickBtnNg }>オ</button>
+                  <button onClick={ handleClickBtnOk }>ヲ</button>
+                </p>
+              );
+            case 'オ':
+              return (
+                <p key={ i }>
+                  <button onClick={ handleClickBtnOk }>オ</button>
+                  <button onClick={ handleClickBtnNg }>ヲ</button>
+                </p>
+              );
         }
 
         return (

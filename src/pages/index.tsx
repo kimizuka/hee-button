@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+import TextareaAutosize from 'react-textarea-autosize';
 import { useEffect, useRef, useState } from 'react';
+import { say } from '@/scripts/say';
 import { Question } from '@/components/Question';
 
 const Wrapper = styled.div`
@@ -10,9 +12,26 @@ const Wrapper = styled.div`
   top: 0; bottom: 0;
   left: 0; right: 0;
 
-  > button {
+  .btn-skip {
     position: fixed;
     top: 8px; left: 8px;
+  }
+
+  .btn-edit {
+    position: fixed;
+    top: 8px; right: 8px;
+  }
+
+  .edit-area {
+    position: fixed;
+    top: 24px; right: 24px;
+    bottom: 24px;
+    background: rgba(255, 255, 255, .4);
+    overflow: scroll;
+  }
+
+  .texts {
+    white-space: pre-wrap;
   }
 
   &[data-state] {
@@ -38,15 +57,46 @@ const Wrapper = styled.div`
       content: '❌';
     }
   }
+
+  [data-is-show='false'] {
+    display: none;
+  }
+
+  [data-is-show='true'] {
+    display: block;
+  }
 `;
 
 export default function IndexPage() {
+  const [ inputText, setInputText ] = useState(
+`えきへでかける
+おかしをたべる
+わたしはげんき
+わにをみる
+へのへのもへじをかく
+きょうはいいてんきだ
+わなげはたのしい
+がっこうへいく
+ごはんはおいしい
+ピアノをひく
+えんぴつけずりをもらう
+うみがみえる
+はがぬける
+ポケモンはたのしい
+バスでえんそくにでかける
+でんきをけす
+にわにはにわとりがいる
+こんにちは`
+  );
   const [ text, setText ] = useState('');
   const [ state, setState ] = useState<'ok' | 'ng' | ''>('');
+  const [ isShowEdit, setIsShowEdit ] = useState(false);
+  const textsRef = useRef<HTMLParagraphElement>(null);
   const currentindexRef = useRef(0);
   const timerRef = useRef(-1);
 
   useEffect(() => {
+    setInputText(localStorage.getItem('texts') || inputText);
     handleClickBtnQuestion();
   }, []);
 
@@ -56,15 +106,14 @@ export default function IndexPage() {
     }
   }, [state]);
 
+  function save(texts = '') {
+    localStorage.setItem('texts', texts);
+  }
+
   function handleClickBtnQuestion() {
-    const texts = [
-      'にわにはにわとりがいる',
-      'えきへでかける',
-      'おかしをたべる'
-    ];
+    const texts = inputText.split(`\n`) || [];
 
     currentindexRef.current = (currentindexRef.current + 1) % texts.length;
-    console.log(currentindexRef.current);
     setText(texts[currentindexRef.current]);
   }
 
@@ -78,23 +127,28 @@ export default function IndexPage() {
     say('ブッブー', 1);
   }
 
-  function say(text = '', rate = .8) {
-    const uttr = new SpeechSynthesisUtterance();
-
-    uttr.text = text;
-    uttr.rate = rate;
-    speechSynthesis.speak(uttr);
-  }
-
   return (
     <Wrapper data-state={ state }>
-      <button onClick={ handleClickBtnQuestion }>🔘</button>
+      <button className="btn-skip" onClick={ handleClickBtnQuestion }>⏩</button>
       <Question
         text={ text }
         onAudio={ () => say(text) }
         onOk={ handleOk }
         onNg={ handleNg }
       />
+      <button
+        className="btn-edit"
+        onClick={ () => setIsShowEdit(!isShowEdit) }>🖋</button>
+      <div className="edit-area" data-is-show={ isShowEdit }>
+        <TextareaAutosize
+          className="texts"
+          value={ inputText }
+          onInput={(evt: any) => {
+            setInputText(evt.target.value)
+            save(evt.target.value);
+          }}
+        ></TextareaAutosize>
+      </div>
     </Wrapper>
   );
 }

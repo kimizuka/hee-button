@@ -12,14 +12,23 @@ const Wrapper = styled.div`
   top: 0; bottom: 0;
   left: 0; right: 0;
 
-  .btn-skip {
+  .ui {
     position: fixed;
     top: 8px; left: 8px;
+  }
+
+  .ui button {
+    font-size: 32px;
+  }
+
+  .ui button + button {
+    margin-left: 8px;
   }
 
   .btn-edit {
     position: fixed;
     top: 8px; right: 8px;
+    font-size: 32px;
   }
 
   .edit-area {
@@ -73,7 +82,6 @@ export default function IndexPage() {
 おかしをたべる
 わたしはげんき
 わにをみる
-へのへのもへじをかく
 きょうはいいてんきだ
 わなげはたのしい
 がっこうへいく
@@ -97,7 +105,7 @@ export default function IndexPage() {
 
   useEffect(() => {
     setInputText(localStorage.getItem('texts') || inputText);
-    handleClickBtnQuestion();
+    handleClickBtnNext();
   }, []);
 
   useEffect(() => {
@@ -110,11 +118,30 @@ export default function IndexPage() {
     localStorage.setItem('texts', texts);
   }
 
-  function handleClickBtnQuestion() {
+  function handleClickBtnNext() {
     const texts = inputText.split(`\n`) || [];
 
     currentindexRef.current = (currentindexRef.current + 1) % texts.length;
     setText(texts[currentindexRef.current]);
+    say(texts[currentindexRef.current]);
+  }
+
+  function handleClickBtnShuffle() {
+    const texts = inputText.split(`\n`) || [];
+    const lastIndex = currentindexRef.current;
+
+    currentindexRef.current = 0 | (Math.random() * texts.length);
+
+    if (lastIndex === currentindexRef.current) {
+      currentindexRef.current = (currentindexRef.current + 1) % texts.length;
+    }
+
+    setText(texts[currentindexRef.current]);
+    say(texts[currentindexRef.current]);
+  }
+
+  function handleClickBtnAudio() {
+    say(text);
   }
 
   function handleOk() {
@@ -129,10 +156,13 @@ export default function IndexPage() {
 
   return (
     <Wrapper data-state={ state }>
-      <button className="btn-skip" onClick={ handleClickBtnQuestion }>⏩</button>
+      <div className="ui">
+        <button className="btn-skip" onClick={ handleClickBtnNext }>⏩</button>
+        <button className="btn-shuffle" onClick={ handleClickBtnShuffle }>🔀</button>
+        <button className="btn-audio" onClick={ handleClickBtnAudio }>💬</button>
+      </div>
       <Question
         text={ text }
-        onAudio={ () => say(text) }
         onOk={ handleOk }
         onNg={ handleNg }
       />

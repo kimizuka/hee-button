@@ -9,12 +9,6 @@ const Wrapper = styled.div`
     margin: 4px;
   }
 
-  .audio {
-    + * {
-      margin-left: 32px;
-    }
-  }
-
   button {
     display: block;
     margin: 4px;
@@ -24,16 +18,13 @@ const Wrapper = styled.div`
 
 export function Question({
   text = '',
-  onAudio,
   onOk,
   onNg
 }: {
   text: string;
-  onAudio: () => void;
   onOk: () => void;
   onNg: () => void;
 }) {
-  console.log(text);
   function handleClickBtnOk() {
     console.log('⭕️');
     onOk();
@@ -46,7 +37,6 @@ export function Question({
 
   return (
     <Wrapper>
-      <button className="audio" onClick={ onAudio }>💬</button>
       {[...text].map((text, i) => {
         switch (text) {
           case 'へ':

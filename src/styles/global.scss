@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&M+PLUS+1p:wght@900&display=swap');
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+
+  &::selection { 
+    background: transparent;
+  }
+}
+
+body {
+  font-family: 'Noto Color Emoji', 'M PLUS 1p', sans-serif;
+  font-size: 16px;
+}

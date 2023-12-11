@@ -3,6 +3,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { useEffect, useRef, useState } from 'react';
 import { say } from '@/scripts/say';
 import { Question } from '@/components/Question';
+import { Splash } from '@/components/Splash';
 
 const Wrapper = styled.div`
   display: flex;
@@ -96,10 +97,10 @@ export default function IndexPage() {
 にわにはにわとりがいる
 こんにちは`
   );
+  const [ isShowSplash, setIsShowSplash ] = useState(true);
   const [ text, setText ] = useState('');
   const [ state, setState ] = useState<'ok' | 'ng' | ''>('');
   const [ isShowEdit, setIsShowEdit ] = useState(false);
-  const textsRef = useRef<HTMLParagraphElement>(null);
   const currentindexRef = useRef(0);
   const timerRef = useRef(-1);
 
@@ -154,6 +155,11 @@ export default function IndexPage() {
     say('ブッブー', 1);
   }
 
+  function handleCLickSplash() {
+    say('はじめます');
+    setIsShowSplash(false);
+  }
+
   return (
     <Wrapper data-state={ state }>
       <div className="ui">
@@ -179,6 +185,10 @@ export default function IndexPage() {
           }}
         ></TextareaAutosize>
       </div>
+      <Splash
+        isShow={ isShowSplash }
+        onClick={ handleCLickSplash }
+      />
     </Wrapper>
   );
 }
